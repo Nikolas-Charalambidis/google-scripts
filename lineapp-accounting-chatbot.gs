@@ -97,7 +97,7 @@ function doPost(e) {
 function reply(data, msg) {
 	UrlFetchApp.fetch(LINE_API_REPLY, {
 		'headers': {
-			'Content-Type': 'application/json charset=UTF-8',
+			'Content-Type': 'application/json;charset=UTF-8',
 			'Authorization': 'Bearer ' + ACCESS_TOKEN,
 		},
 		'method': 'post',
