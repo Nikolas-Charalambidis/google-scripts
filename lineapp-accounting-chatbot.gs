@@ -72,7 +72,7 @@ function doPost(e) {
 		const userMessage = data.message.text
 		console.log("Data: ", userMessage)
 
-		let result;
+		let result
 		if (userMessage === "สรุป" || userMessage === "sum" || userMessage === "summary") {
 			console.log("Requesting summary...")
 			result = summary()
@@ -97,7 +97,7 @@ function doPost(e) {
 function reply(data, msg) {
 	UrlFetchApp.fetch(LINE_API_REPLY, {
 		'headers': {
-			'Content-Type': 'application/json charset=UTF-8',
+			'Content-Type': 'application/json;charset=UTF-8',
 			'Authorization': 'Bearer ' + ACCESS_TOKEN,
 		},
 		'method': 'post',
