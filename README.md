@@ -6,8 +6,10 @@ Google Sheets expenses integrated as a Line application chatbot. The script prim
 Copy the initial Google Sheet file for the initial setup from [here](https://docs.google.com/spreadsheets/d/1D5IytntF52udNRGHkcv8oMXKlKL9h5GMCOntrccmTyc/edit?usp=sharing).
 
 As of the current version, items can contain only one word.
-- `pizza 250` records an expense for `pizza` item of value `250`
-- `brownEnvelope -1000` records an income of `250`.
+- `somTam 50` records an **expense** for `somTam` item of value `50`
+- `brownEnvelope -1000` records an **income** of `1000`
+- `toyotaHilux 1000000` records an **expense** for `toyotaHilux` item of value `1000000`
+- `fatBrownEnvelope -200000` records an **income** of `200000`
 
 This command can print out a summary:
 - `สรุป`
