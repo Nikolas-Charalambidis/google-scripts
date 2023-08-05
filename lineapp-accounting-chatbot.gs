@@ -2,7 +2,7 @@
  *  HEADER
  ***************************************************************************************************
  *  IMPLEMENTATION
- *     version         lineapp-accounting-chatbot.gs 0.0.1
+ *     version         lineapp-accounting-chatbot.gs 1.0.0
  *     author          Nikolas CHARALAMBIDIS
  *     license         GNU GPLv3
  *     link            https://github.com/Nikolas-Charalambidis/google-scripts
