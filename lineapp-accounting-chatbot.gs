@@ -73,7 +73,7 @@ function doPost(e) {
 		console.log("Data: ", userMessage)
 
 		let result
-		if (userMessage === "สรุป" || userMessage === "sum" || userMessage === "summary") {
+		if (userMessage === translate("summary.input.short") || userMessage === translate("summary.input.long")) {
 			console.log("Requesting summary...")
 			result = summary()
 		} else {
@@ -133,13 +133,13 @@ function summary() {
 	// short-circuiting
 	if (lastRowIndex === 1) {
 		console.log("Short-circuiting because of 0 items")
-		result += " No data\n"
+		result += " " + capitalize(translate("summary.output.no-data")) + "\n"
 		result += separator()
 		return result
 	}
 	if (lastRowIndex === 2) {
 		console.log("Short-circuiting because of 1 item")
-		result += "คงเหลือ: " + balance + " บาท\n"
+		result += " " + capitalize(translate("summary.output.balance")) + ": " + balance + " " + translate("summary.output.currency") + "\n"
 		result += separator()
 		return result
 	}
@@ -152,20 +152,19 @@ function summary() {
 		const todayDateString = new Date().toLocaleString({timeZone: TIME_ZONE}).slice(0,10)
 		// include only today items
 		if (dateString === todayDateString) {
-			const dateFormatted = Utilities.formatDate(date, 'GMT+7', 'dd/MM')
 			const item = GOOGLE_SHEET.getRange(i, 2).getValue()
 			const price = GOOGLE_SHEET.getRange(i, 3).getValue()
 			const type = GOOGLE_SHEET.getRange(i, 4).getValue() === 'INCOME' ? "(+)" : "(-)"
-			result += " " + dateFormatted + " " + type + " " + item + " : " + price + " บาท\n"
+			result += " " + dateString + " " + type + " " + item + " : " + price + " " + translate("summary.output.currency") + "\n"
 		}
 	}
 
 	// summary
 	result += separator()
-	result += " ทุน:         " + capital + " บาท\n"
-	result += " รายได้ทั้งหมด: " + income + " บาท\n"
-	result += " รายจ่ายรวม:  " + expenses + " บาท\n"
-	result += " คงเหลือสุทธิ:  " + balance + " บาท\n"
+	result += " " + pad(" " + capital  + " " + translate("summary.output.currency"), 16) + " --> " + translate("summary.output.capital") + "\n"
+	result += " " + pad(" " + income   + " " + translate("summary.output.currency"), 16) + " --> " + translate("summary.output.total-income") + "\n"
+	result += " " + pad(" " + expenses + " " + translate("summary.output.currency"), 16) + " --> " + translate("summary.output.total-expenses") + "\n"
+	result += " " + pad(      balance  + " " + translate("summary.output.currency"), 16) + " --> " + translate("summary.output.net-balance") + "\n"
 	result += separator()
 	return result
 }
@@ -213,8 +212,8 @@ function change(userMessage) {
 	GOOGLE_SHEET.getRange(lastRowIndex + 1, 4).setBorder(true, true, true, true, false, false).setValue(type)
 
 	// join the parameters with the empty space delimiter
-	const result = [today, item, price, 'บาท (' + type.toLowerCase() + ')'].join(" ")
-	return result + "\n✍️บันทึกแล้ว"
+	const result = [today, item, price, translate("summary.output.currency") + " (" + translate("change.output." + type.toLowerCase()) + ')'].join(" ")
+	return result + "\n✍️ " + capitalize(translate("change.output.record-saved"))
 }
 
 /**
@@ -282,4 +281,55 @@ function fixTimezone(date, add) {
 	const result = new Date(timestamp)
 	console.log("Fixed timezone (" + (add ? "add" : "subtract") + "): " + date + " -> " + result)
 	return result
+}
+
+/****************************************************************************
+ * TRANSLATIONS
+ ****************************************************************************/
+
+const DICTIONARY = {
+	"summary.input.short" : defineTranslation("sum", "สรุป"),
+	"summary.input.long"  : defineTranslation("summary", "สรุป"),
+
+	"summary.output.capital" : defineTranslation("capital", "ทุน"),
+	"summary.output.total-income" : defineTranslation("total income", "รายได้ทั้งหมด"),
+	"summary.output.total-expenses" : defineTranslation("total expenses", "รายจ่ายรวม"),
+	"summary.output.balance" : defineTranslation("balance", "คงเหลือ"),
+	"summary.output.net-balance" : defineTranslation("net balance", "คงเหลือสุทธิ"),
+
+	"summary.output.no-data" : defineTranslation("no data", "ไม่มีข้อมูล"),
+	"summary.output.currency" : defineTranslation(",-", "บาท"),
+
+	"change.output.income" : defineTranslation("income", "รายได้"),
+	"change.output.expense" : defineTranslation("expense", "รายจ่าย"),
+	"change.output.record-saved" : defineTranslation("record saved", "️บันทึกแล้ว")
+}
+
+function defineTranslation(en, th) {
+	return {
+		"en" : en,
+		"th": th
+	}
+}
+
+function translate(code) {
+	const language = LOCALE.language
+	const texts = DICTIONARY[code]
+	if (texts !== undefined) {
+		const text = texts[language]
+		return text === undefined ? texts['en'] : text
+	} else {
+		return "???"
+	}
+}
+
+function capitalize(string) {
+	return string.charAt(0).toUpperCase() + string.slice(1)
+}
+
+function pad(string, length) {
+	if (string.length < length) {
+		string += Array((length+1) - string.length).join(' ')
+	}
+	return string
 }
