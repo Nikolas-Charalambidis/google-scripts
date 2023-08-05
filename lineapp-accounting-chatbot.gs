@@ -1,12 +1,25 @@
-/****************************************************************************
- * lineapp-accounting-chatbot 1.0.0
- * Nikolas Charalambidis 2013 | Forked from https://gist.github.com/iton5/eb11191e7ce340d0a006429a1b4316ca
- ****************************************************************************/
+/***************************************************************************************************
+ *  HEADER
+ ***************************************************************************************************
+ *  IMPLEMENTATION
+ *     version         lineapp-accounting-chatbot.gs 0.0.1
+ *     author          Nikolas CHARALAMBIDIS
+ *     license         GNU GPLv3
+ *     link            https://github.com/Nikolas-Charalambidis/google-scripts
+ *     forked from     https://gist.github.com/iton5/eb11191e7ce340d0a006429a1b4316ca
+ *
+ ***************************************************************************************************
+ *  HISTORY
+ *     2023-08-05 : Nikolas CHARALAMBIDIS : Script creation
+ *
+ ***************************************************************************************************
+ *  END_OF_HEADER
+ ***************************************************************************************************/
 
 
-/****************************************************************************
+/***************************************************************************************************
  * INPUT CONSTANTS
- ****************************************************************************/
+ ***************************************************************************************************/
 
 
 /**
@@ -46,10 +59,9 @@ const GOOGLE_SHEET_URL = 'xxx'
 const GOOGLE_SHEET_NAME = 'xxx'
 
 
-/****************************************************************************
+/***************************************************************************************************
  * CALCULATED CONSTANTS
- ****************************************************************************/
-
+ ***************************************************************************************************/
 
 const GOOGLE_SPREADSHEET = SpreadsheetApp.openByUrl(GOOGLE_SHEET_URL)
 const GOOGLE_SHEET = GOOGLE_SPREADSHEET.getSheetByName(GOOGLE_SHEET_NAME)
@@ -57,9 +69,9 @@ const LINE_API_REPLY = 'https://api.line.me/v2/bot/message/reply'
 const TIME_ZONE = LOCALE.timeZones[0]
 
 
-/****************************************************************************
- * SCRIPT METHODS
- ****************************************************************************/
+/***************************************************************************************************
+ * SCRIPT FUNCTIONS
+ ***************************************************************************************************/
 
 
 /**
@@ -161,10 +173,10 @@ function summary() {
 
 	// summary
 	result += separator()
-	result += " " + pad(" " + capital  + " " + translate("summary.output.currency"), 16) + " --> " + translate("summary.output.capital") + "\n"
-	result += " " + pad(" " + income   + " " + translate("summary.output.currency"), 16) + " --> " + translate("summary.output.total-income") + "\n"
-	result += " " + pad(" " + expenses + " " + translate("summary.output.currency"), 16) + " --> " + translate("summary.output.total-expenses") + "\n"
-	result += " " + pad(      balance  + " " + translate("summary.output.currency"), 16) + " --> " + translate("summary.output.net-balance") + "\n"
+	result += " " + pad(" " + capital  + " " + translate("summary.output.currency"), 15) + " --> " + translate("summary.output.capital") + "\n"
+	result += " " + pad(" " + income   + " " + translate("summary.output.currency"), 15) + " --> " + translate("summary.output.total-income") + "\n"
+	result += " " + pad(" " + expenses + " " + translate("summary.output.currency"), 15) + " --> " + translate("summary.output.total-expenses") + "\n"
+	result += " " + pad(      balance  + " " + translate("summary.output.currency"), 15) + " --> " + translate("summary.output.net-balance") + "\n"
 	result += separator()
 	return result
 }
@@ -212,7 +224,7 @@ function change(userMessage) {
 	GOOGLE_SHEET.getRange(lastRowIndex + 1, 4).setBorder(true, true, true, true, false, false).setValue(type)
 
 	// join the parameters with the empty space delimiter
-	const result = [today, item, price, translate("summary.output.currency") + " (" + translate("change.output." + type.toLowerCase()) + ')'].join(" ")
+	const result = [today.toLocaleString("en-UK").slice(0,17), "-->", item, price, translate("summary.output.currency") + " (" + translate("change.output." + type.toLowerCase()) + ')'].join(" ")
 	return result + "\n✍️ " + capitalize(translate("change.output.record-saved"))
 }
 
@@ -283,10 +295,14 @@ function fixTimezone(date, add) {
 	return result
 }
 
-/****************************************************************************
- * TRANSLATIONS
- ****************************************************************************/
 
+/***************************************************************************************************
+ * TRANSLATIONS
+ ***************************************************************************************************/
+
+/**
+ * Translations key-map.
+ */
 const DICTIONARY = {
 	"summary.input.short" : defineTranslation("sum", "สรุป"),
 	"summary.input.long"  : defineTranslation("summary", "สรุป"),
@@ -305,6 +321,13 @@ const DICTIONARY = {
 	"change.output.record-saved" : defineTranslation("record saved", "️บันทึกแล้ว")
 }
 
+/**
+ * A simple method helping to define a translation for various languages.
+ *
+ * @param en English text
+ * @param th Thai text
+ * @return {Object}
+ */
 function defineTranslation(en, th) {
 	return {
 		"en" : en,
@@ -312,6 +335,12 @@ function defineTranslation(en, th) {
 	}
 }
 
+/**
+ * Translates based on the set {@link Locale}
+ *
+ * @param code Text code
+ * @return {String}
+ */
 function translate(code) {
 	const language = LOCALE.language
 	const texts = DICTIONARY[code]
@@ -323,10 +352,23 @@ function translate(code) {
 	}
 }
 
+/**
+ * Capitalizes the first letter of the input string.
+ *
+ * @param string String to be capitalized
+ * @return {String}
+ */
 function capitalize(string) {
 	return string.charAt(0).toUpperCase() + string.slice(1)
 }
 
+/**
+ * Adds spaces to the end of the input string to match given length in total.
+ *
+ * @param string String to be edited
+ * @param length Desired string length
+ * @return {String}
+ */
 function pad(string, length) {
 	if (string.length < length) {
 		string += Array((length+1) - string.length).join(' ')
