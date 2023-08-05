@@ -24,7 +24,7 @@ const SECONDS_FOR_ITEM_PROTECTION = 180
 /**
  * Replace 'xxx' with the Line access token.
  * For example: '+pHoa+pF84EAkH6WgIspLKE5z'
- * Don't forge to wrap it between the single-quotation marks and remember, the link can be much longer than in the example.
+ * Don't forget to wrap it between the single-quotation marks and remember, the link can be much longer than in the example.
  * @type {string}
  */
 const ACCESS_TOKEN = 'xxx'
@@ -32,7 +32,7 @@ const ACCESS_TOKEN = 'xxx'
 /**
  * Replace 'xxx' with the Google Sheet edit URL.
  * For example: 'https://docs.google.com/spreadsheets/d/2csFUCjBP8/edit'
- * Don't forge to wrap it between the single-quotation marks and remember, the link can be much longer than in the example.
+ * Don't forget to wrap it between the single-quotation marks and remember, the link can be much longer than in the example.
  * @type {string}
  */
 const GOOGLE_SHEET_URL = 'xxx'
@@ -40,7 +40,7 @@ const GOOGLE_SHEET_URL = 'xxx'
 /**
  * Replace 'xxx' with the Google Sheet individual sheet name.
  * For example: 'sheet1'
- * Don't forge to wrap it between the single-quotation marks and remember, the link can be much longer than in the example.
+ * Don't forget to wrap it between the single-quotation marks and remember, the link can be much longer than in the example.
  * @type {string}
  */
 const GOOGLE_SHEET_NAME = 'xxx'
